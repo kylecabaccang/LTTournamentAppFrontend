@@ -1,0 +1,43 @@
+/* Style for the tournament bracket */
+.tournament-bracket {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  /* Style for each round */
+  .round {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  /* Style for each match in a round */
+  .match {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
+  
+  /* Style for players */
+  .player {
+    width: 150px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: 2px solid #333;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Style for disabled players (when a winner is selected) */
+  .player.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
