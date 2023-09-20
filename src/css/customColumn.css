@@ -1,0 +1,11 @@
+.custom-col-span {
+    width: 50%; /* Adjust this value to make it smaller, e.g., width: 5% for half the size */
+    
+}
+
+.custom-col-span2 {
+    width: 51%; /* Adjust this value to make it smaller, e.g., width: 5% for half the size */
+    display: flex;
+    justify-self: end;
+}
+
