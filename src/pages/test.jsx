@@ -1,107 +1,60 @@
 import React, { useState } from 'react';
-import '../css/TournamentBracket.css'; // You can create a CSS file for styling
 
-export default function SingleElimination() {
-  const [winnersRound1, setWinnersRound1] = useState(Array(8).fill(null));
-  const [winnersRound2, setWinnersRound2] = useState(Array(4).fill(null));
-  const [winnersSemiFinals, setWinnersSemiFinals] = useState(Array(2).fill(null));
-  const [champion, setChampion] = useState(null);
+export default function TournamentBracket() {
+  const [rnd1Match1Winner, setRnd1Match1Winner] = useState('#');
+  const [rnd1Match1Selected, setRnd1Match1Selected] = useState(false);
 
-  const handleWinnerClick = (round, matchIndex, playerName) => {
-    switch (round) {
-      case 1:
-        const newWinnersRound1 = [...winnersRound1];
-        newWinnersRound1[matchIndex] = playerName;
-        setWinnersRound1(newWinnersRound1);
-        break;
-      case 2:
-        const newWinnersRound2 = [...winnersRound2];
-        newWinnersRound2[matchIndex] = playerName;
-        setWinnersRound2(newWinnersRound2);
-        break;
-      case 3:
-        const newWinnersSemiFinals = [...winnersSemiFinals];
-        newWinnersSemiFinals[matchIndex] = playerName;
-        setWinnersSemiFinals(newWinnersSemiFinals);
-        break;
-      default:
-        break;
-    }
+  // Create an array of player names
+  const players = [];
+  for (let i = 1; i <= 16; i++) {
+    players.push(`Player ${i}`);
+  }
+
+  const handleWinnerClick = (player) => {
+    // Add logic to handle winner click and update state
   };
 
   return (
-    <div className="tournament-bracket">
-      <div className="round round-1">
-        {Array(8)
-          .fill()
-          .map((_, matchIndex) => (
-            <div className="match" key={matchIndex}>
+    <div className="text-center">
+      <div className="grid grid-cols-3">
+         {/* Column 1: Players 1-16 */}
+         <div className="col-span-1">
+          {players.map((player, index) => (
+            <div key={index} className="">
               <div
-                className={`player ${
-                  winnersRound1[matchIndex] ? 'disabled' : ''
-                }`}
-                onClick={() =>
-                  handleWinnerClick(1, matchIndex, `Player ${matchIndex + 1}`)
-                }
-              >
-                {winnersRound1[matchIndex] || `Player ${matchIndex * 2 + 1}`}
+                className={`border-2 border-black ${rnd1Match1Selected ? 'disabled' : ''}`}
+                onClick={() => handleWinnerClick(player)}>
+                {player}
               </div>
-              <div className="player">
-                {winnersRound1[matchIndex] || `Player ${matchIndex * 2 + 2}`}
-              </div>
+              {/* Add an empty cell with the same size as players' cells after every 2 players (excluding the last two) */}
+              {index % 2 === 1 && index < players.length - 2 && (
+                <div className={`border-2 border-transparent h-[40px]`}>d</div>
+              )}
             </div>
           ))}
-      </div>
+        </div>
 
-      <div className="round round-2">
-        {Array(4)
-          .fill()
-          .map((_, matchIndex) => (
-            <div className="match" key={matchIndex}>
-              <div
-                className={`player ${
-                  winnersRound2[matchIndex] ? 'disabled' : ''
-                }`}
-                onClick={() =>
-                  handleWinnerClick(2, matchIndex, winnersRound1[matchIndex * 2])
-                }
-              >
-                {winnersRound2[matchIndex] || 'Winner'}
-              </div>
-              <div className="player">
-                {winnersRound2[matchIndex] || 'Winner'}
-              </div>
+
+         {/* Column 3: Different boxes */}
+         <div className="col-span-1">
+          {players.map((player, index) => (
+            <div key={index}>
+              {/* Add empty cells with the same size as Box 1 and Box 2 */}
+              {index % 2 === 0 && index < players.length - 1 && (
+                <div>
+                  <div className="border-2 border-transparent">d</div>
+                  <div className="border-2 border-transparent">d</div>
+                </div>
+              )}
+              {/* Add different boxes here */}
+              {index % 2 === 0 && (
+                <div className="border-2 border-red-500">Box 1</div>
+              )}
+              {index % 2 === 0 && (
+                <div className="border-2 border-red-500">Box 2</div>
+              )}
             </div>
           ))}
-      </div>
-
-      <div className="round round-3">
-        {Array(2)
-          .fill()
-          .map((_, matchIndex) => (
-            <div className="match" key={matchIndex}>
-              <div
-                className={`player ${
-                  winnersSemiFinals[matchIndex] ? 'disabled' : ''
-                }`}
-                onClick={() =>
-                  handleWinnerClick(3, matchIndex, winnersRound2[matchIndex * 2])
-                }
-              >
-                {winnersSemiFinals[matchIndex] || 'Finalist'}
-              </div>
-              <div className="player">
-                {winnersSemiFinals[matchIndex] || 'Finalist'}
-              </div>
-            </div>
-          ))}
-      </div>
-
-      <div className="round round-4">
-        <div className="match">
-          <div className={`player ${champion ? 'disabled' : ''}`}>
-            {champion || 'Champion'}
-          </div>
         </div>
       </div>
     </div>
