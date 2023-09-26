@@ -24,3 +24,5 @@ function Match({ player1, player2, onWinnerSelected }) {
     </div>
   );
 }
+
+export default Match;
