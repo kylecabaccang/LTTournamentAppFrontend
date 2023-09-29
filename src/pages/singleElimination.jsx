@@ -1,5 +1,7 @@
 import "../css/customColumn.css"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// import Match from '../components/Matches';
 
 // Code Roadmap:
 // rnd1 = columns of each rounds
@@ -43,6 +45,41 @@ export default function singleElimination() {
         'Jiffy'
 
     ];
+
+    const [tournamentData, setTournamentData] = useState(null);
+
+    useEffect(() => {
+        const url = 'https://tournament.luckycue.tech/api/get-matches/1';
+
+        fetch(url)
+        .then((response) => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            // Handle the successful response and data here
+            const groups = data[0].groups;
+            // const groups = data[0].groups[0].rounds[0].group_id;
+
+            const rounds = data[0].groups[0].rounds;
+            const fights = data[0].groups[0].rounds[0].fights;
+
+            console.log('Groups:', groups);
+            console.log('Rounds:', rounds);
+            console.log('Fights:', fights);
+        })
+        .catch((error) => {
+            // Handle fetch errors, including network issues or JSON parsing errors
+            console.error('Fetch error:', error);
+        });
+        
+    }, []);
+
+
+
+   
 
     // ROUND 1
     const [rnd1Match1Winner, setRnd1Match1Winner] = useState('#'); // Initialize the winner state with an empty string
