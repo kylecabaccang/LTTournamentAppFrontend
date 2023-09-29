@@ -1,0 +1,5 @@
+.container {
+    width: 500vw !important; /* Ensure the container takes up the full width of the viewport */
+    overflow-x: auto; /* Enable horizontal scrolling when content overflows */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+  }

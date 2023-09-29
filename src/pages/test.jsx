@@ -1,10 +1,17 @@
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import "../css/container.css";
+import Spacer from '../components/Spacer.jsx';
+import Spacer2 from '../components/Spacer2.jsx';
+import Spacer3 from '../components/Spacer3.jsx';
+import Spacer4 from '../components/Spacer4.jsx';
+
 
 function Match({ player1, player2, onWinnerSelected }) {
   const [winner, setWinner] = useState(null);
   const [loser, setLoser] = useState(null);
+
   const [player1Clicked, setPlayer1Clicked] = useState(false);
   const [player2Clicked, setPlayer2Clicked] = useState(false);
 
@@ -24,7 +31,7 @@ function Match({ player1, player2, onWinnerSelected }) {
 
   return (
     <div className='flex'>
-      <div className='h-[80px] w-[100%]'>
+      <div className='h-[80px] w-[300px]'>
         <div className='border-black border-2 h-[40px]'>
           <button className='w-[100%]'
             onClick={() => handleWinnerSelected(player1)}
@@ -121,32 +128,36 @@ function Tournament() {
 //   ];
 
   
-  const [winnersBracket, setWinnersBracket] = useState([]);
-  const [winnersBracketRound1, setWinnersBracketRound1] = useState([]);
+
   const [players, setAllPlayers] = useState([]);
   const [roundOneBracket, setRoundOneBracket] = useState([players]);
-  // const [winnersBracketRound3, setWinnersBracketRound3] = useState([])
-  // const [losersBracketRound3, setLosersBracketRound3] = useState([]);
+  const [roundTwoBracket, setRoundTwoBracket] = useState([]);
+  const [roundThreeBracket, setRoundThreeBracket] = useState([]);
+  const [roundFourBracket, setRoundFourBracket] = useState([]);
+  const [champion, setChampion] = useState([]);
 
 
 
-  const handleRoundOneBracketComplete = (winner, loser) => {
-    setWinnersBracket([...winnersBracket, winner]);
+
+  const handleRoundOneBracketComplete = (winner) => {
+    setRoundTwoBracket([...roundTwoBracket, winner]);
 
     if (roundOneBracket.length === 1) {
       alert(`Tournament Winner: ${winner}`);
     }
   };
 
-
-
-  const handleRoundTwoBracketComplete = (winner, loser) => {
-    setWinnersBracketRound1([...winnersBracketRound1, winner]);
+  const handleRoundTwoBracketComplete = (winner) => {
+    setRoundThreeBracket([...roundThreeBracket, winner]);
   };
 
-  // const handleRoundThreeBracketComplete = (winner, loser) => {
-  //   setLosersBracketRound3([...losersBracketRound3, losersBracketRound2[loser]])
-  //   setWinnersBracketRound3([...winnersBracketRound3, winnersBracketRound1[winner]])
+  const handleRoundThreeBracketComplete = (winner) => {
+    setRoundFourBracket([...roundFourBracket, winner]);
+  };
+
+  const handleChampion = (winner) => {
+    setChampion([...champion, winner]);
+  };
 
   //   // // Check if it's the final match in winner's bracket round 2
   //   // if (winnersBracket.length === 2) {
@@ -167,6 +178,7 @@ function Tournament() {
   // })
 
 
+  // Fetching of Players from the database
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -183,16 +195,64 @@ function Tournament() {
     fetchData();
   }, []);
   
-  
+// FOR ROUND 1 LINES
+const numMatchesRound1 = Math.ceil(roundOneBracket.length / 4);
+const Spacers = Array(numMatchesRound1).fill().map((_, index) => (
+  <Spacer key={`spacers${index}`} />
+));
 
- 
+// FOR ROUND 2 LINES
+const numMatchesRound2 = Math.ceil(roundTwoBracket.length / 4);
+const Spacers2 = Array(numMatchesRound2).fill().map((_, index) => (
+  <Spacer2 key={`spacers${index}`} />
+));
+
+
+
+
+// MOUSE MOVE
+const scrollContainerRef = useRef(null);
+const [isDragging, setIsDragging] = useState(false);
+const [startX, setStartX] = useState(0);
+const [scrollLeft, setScrollLeft] = useState(0);
+
+const handleMouseDown = (e) => {
+  setIsDragging(true);
+  setStartX(e.clientX);
+  setScrollLeft(scrollContainerRef.current.scrollLeft);
+  scrollContainerRef.current.style.cursor = 'grabbing'; // Change cursor style
+  e.preventDefault();
+};
+
+const handleMouseUp = () => {
+  setIsDragging(false);
+  scrollContainerRef.current.style.cursor = 'auto'; // Reset cursor style
+};
+
+const handleMouseMove = (e) => {
+  if (!isDragging) return;
+  const deltaX = e.clientX - startX;
+
+  // Update both horizontal and vertical scroll positions
+  scrollContainerRef.current.scrollLeft = scrollLeft - deltaX;
+};
+
+
 
   return (
     <>
-      <h1 className='bg-red-500'>Single Elimination Tournament</h1>
+    <div 
+    className='scroll-container overflow-y-auto overflow-x-auto'
+    ref={scrollContainerRef}
+    onMouseDown={handleMouseDown}
+    onMouseUp={handleMouseUp}
+    onMouseMove={handleMouseMove}
+    >
+      <h1 className='bg-red-500 w-[100%]'>Single Elimination Tournament</h1>
       <div className='flex flex-grow'>
-        <div className='w-[20%]'>
-          <h2 className='text-center h-[30px]'>Round 1</h2>
+
+        <div className='w-[300px]'>
+          <h2 className='text-center h-[30px] border-lime-500 border-2'>Round 1</h2>
           {roundOneBracket.map((player, index) => {
             if (index % 2 === 0 && index < roundOneBracket.length - 1) {
               return (
@@ -201,7 +261,7 @@ function Tournament() {
                   key={`match${index / 2}`}
                   player1={roundOneBracket[index]}
                   player2={roundOneBracket[index + 1]}
-                  onWinnerSelected={(winner, loser) => handleRoundOneBracketComplete(winner, loser)}
+                  onWinnerSelected={(winner) => handleRoundOneBracketComplete(winner)}
                 />
                 <div className='h-[80px]'></div>
                 </>
@@ -211,193 +271,23 @@ function Tournament() {
           })}
         </div>
 
+        {/* SPACER FOR ROUND1 connecting ROUND2 LINE UI */}
+        <div className='flex flex-col'>
+          {Spacers}
+        </div>
 
-          {/* SPACER */}
-          <div className='w-[160px]'>
-            <div className='h-[30px]'></div>
-          {/* ROUND1 FIRST LINES */}
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black '></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] '></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-          {/* ROUND1 SECOND LINES */}
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black '></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] '></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-          {/* ROUND1 THIRD LINES */}
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black '></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] '></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-          {/* ROUND1 FOURTH LINES */}
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-black'></div>
-                    <div className='h-[40px] border-r-2 border-black '></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-
-            <div className='flex flex-row'>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px] border-r-2 border-b-2 border-black'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-                <div className='h-[80px] w-[80px] flex flex-col'>
-                    <div className='h-[40px]'></div>
-                    <div className='h-[40px]'></div>
-                </div>
-            </div>
-            
-
-          </div>
-
-
-        <div className='w-[20%]'>
-          <h1 className='text-center h-[30px]'>Round 2</h1>
+        <div className='w-[300px]'>
+          <h1 className='text-center h-[30px] border-lime-500 border-2'>Round 2</h1>
           <div className='mt-[80px]'>
-          
-          {winnersBracket.map((player, index) => {
-            if (index % 2 === 0 && index < winnersBracket.length - 1) {
+          {roundTwoBracket.map((player, index) => {
+            if (index % 2 === 0 && index < roundTwoBracket.length - 1) {
               return (
                 <>
                 <Match
                   key={`match${index / 2}`} 
-                  player1={winnersBracket[index]}
-                  player2={winnersBracket[index + 1]}
-                  onWinnerSelected={(winner, loser) => handleRoundTwoBracketComplete(winner, loser)}
+                  player1={roundTwoBracket[index]}
+                  player2={roundTwoBracket[index + 1]}
+                  onWinnerSelected={(winner, loser) => handleRoundTwoBracketComplete(winner)}
                 />
                 <div className='py-[120px]'>
 
@@ -411,206 +301,101 @@ function Tournament() {
           </div>
         </div>
 
-              {/* SPACER */}
-              <div className='w-[160px]'>
-                  <div className='h-[30px]'></div>
-                  {/* ROUND2 FIRST LINES */}
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-black'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  {/* ROUND2 SECOND LINES */}
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-r-2 border-black'></div>
-                          <div className='h-[40px] '></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] '></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] '></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  
-
-                  
-                  {/* 
-                //    */}
-
-                  
-                <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-black'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  {/* ROUND2 SECOND LINES */}
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                          <div className='h-[40px] border-r-2 border-black'></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px]'></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-                  <div className='flex flex-row'>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] border-b-2 border-r-2 border-black'></div>
-                          <div className='h-[40px] '></div>
-                      </div>
-                      <div className='h-[80px] w-[80px] flex flex-col'>
-                          <div className='h-[40px] '></div>
-                          <div className='h-[40px]'></div>
-                      </div>
-                  </div>
-
-            
-        
-
-        
-
-      
-                  {/* 
-                //    */}
-
-
-               
-
-                
-                
-                
-
-
-              </div>
-
-        <div>
-        <h2 className='text-center'>Semi-Finals</h2>
-        {winnersBracketRound1.map((player, index) => {
-         
-            return (
-              <>
-              
-                <div key={index}>
-                  <div className='border-black border-2 m-5'>{player}</div>
+              {/* SPACER FOR ROUND2 connecting ROUND3 LINE UI */}
+             
+                <div className='flex flex-col'>
+                <div className='h-[30px]'></div>
+                  {Spacers2}
                 </div>
 
-              </>
-            );
-          
-        })}
-      </div> 
-      </div>
+
+
+        <div className='w-[300px]'>
+          <h1 className='text-center h-[30px] border-lime-500 border-2'>SEMI-FINALS</h1>
+          <div className='mt-[240px]'>
+          {roundThreeBracket.map((player, index) => {
+            if (index % 2 === 0 && index < roundThreeBracket.length - 1) {
+              return (
+                <>
+                <Match
+                  key={`match${index / 2}`} 
+                  player1={roundThreeBracket[index]}
+                  player2={roundThreeBracket[index + 1]}
+                  onWinnerSelected={(winner) => handleRoundThreeBracketComplete(winner)}
+                />
+                <div className='py-[280px]'></div>
+                </>
+              );
+            }
+            return null;
+          })}
+      
+          </div>
+        </div>
+
+
+        <div className='flex flex-col'>
+          <div className='h-[30px]'></div>
+            <Spacer3/>
+        </div>
+
+
+        <div className='w-[300px]'>
+          <h1 className='text-center h-[30px] border-lime-500 border-2'>FINALS</h1>
+          <div className='mt-[600px]'>
+          {roundFourBracket.map((player, index) => {
+            if (index % 2 === 0 && index < roundFourBracket.length - 1) {
+              return (
+                <>
+                <Match
+                  key={`match${index / 2}`} 
+                  player1={roundFourBracket[index]}
+                  player2={roundFourBracket[index + 1]}
+                  onWinnerSelected={(winner) => handleChampion(winner)}
+                />
+                <div className='py-[280px]'></div>
+                </>
+              );
+            }
+            return null;
+          })}
+      
+          </div>
+        </div>
+
+        <div className='flex flex-col'>
+          <div className='h-[30px]'></div>
+            <Spacer4/>
+        </div>
+        
+        <div className='w-[300px]'>
+          <h1 className='text-center h-[30px] w-[150px] border-lime-500 border-2'>CHAMPION</h1>
+          <div className='mt-[615px] text-center border-black border-2 p-3'>
+            {champion}
+          </div>
+        </div>
+
+        
+
+
+          {/* <div>
+            <h2 className='text-center'>Semi-Finals</h2>
+            {winnersBracketRound1.map((player, index) => {
+            
+                return (
+                  <>
+                  
+                    <div key={index}>
+                      <div className='border-black border-2 m-5'>{player}</div>
+                    </div>
+
+                  </>
+                );
+              
+            })}
+        </div>  */}
+
+
 
 
       {/* <div>
@@ -629,6 +414,16 @@ function Tournament() {
           return null;
         })}
       </div> */}
+
+
+
+
+
+
+      </div>
+    </div>
+
+      
 
   
     </>
