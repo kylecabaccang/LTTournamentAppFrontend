@@ -6,9 +6,12 @@ import Spacer from '../components/16PlayerSpacer1.jsx';
 import Spacer2 from '../components/16PlayerSpacer2.jsx';
 import Spacer3 from '../components/16PlayerSpacer3.jsx';
 import Spacer4 from '../components/16PlayerSpacer4.jsx';
+import NavigationBar from '../components/NavigationBar';
+
 
 
 function Match({ player1, player2, onWinnerSelected }) {
+
   const [winner, setWinner] = useState(null);
   const [loser, setLoser] = useState(null);
 
@@ -58,7 +61,7 @@ function Match({ player1, player2, onWinnerSelected }) {
 function Tournament() {
 
   const [players, setAllPlayers] = useState([]);
-  const [roundOneBracket, setRoundOneBracket] = useState([players]);
+  const [roundOneBracket, setRoundOneBracket] = useState([]);
   const [roundTwoBracket, setRoundTwoBracket] = useState([]);
   const [roundThreeBracket, setRoundThreeBracket] = useState([]);
   const [roundFourBracket, setRoundFourBracket] = useState([]);
@@ -87,7 +90,7 @@ function Tournament() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/16player');
+        const res = await axios.get('http://127.0.0.1:8000/api/auth/16player');
         console.log(res.data.player_names);
         setAllPlayers(res.data.player_names);
         setRoundOneBracket(res.data.player_names);
@@ -153,6 +156,7 @@ const handleMouseMove = (e) => {
     onMouseUp={handleMouseUp}
     onMouseMove={handleMouseMove}
     >
+      <NavigationBar/>
       <h1 className='bg-red-500 w-[100%]'>Single Elimination Tournament</h1>
       <div className='flex flex-grow'>
 
