@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import NavigationBar from '../components/NavigationBar';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -36,7 +35,6 @@ export default function Login() {
   
   return (
     <>
-    <NavigationBar/>
     <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
     <div className="container mx-auto">
       <div className="-mx-4 flex flex-wrap">
