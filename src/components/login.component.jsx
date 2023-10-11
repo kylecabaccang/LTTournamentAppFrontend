@@ -57,7 +57,7 @@ export default class Login extends Component {
 
     render() {
         if (this.state.loggedIN) {
-            return <Navigate to="/aa" />;
+            return <Navigate to="/admin" />;
         }
         const { error } = this.state;
         return (

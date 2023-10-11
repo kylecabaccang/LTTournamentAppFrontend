@@ -1,6 +1,19 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function NavigationBar() {
+    // Check if an access_token exists in local storage
+    const hasUserKey = localStorage.getItem('user') !== null;
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+
+        navigate('/');
+    }
+
     return (
         
     // < !--Main navigation container-- >
@@ -48,39 +61,61 @@ export default function NavigationBar() {
                             <a
                                 className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
                                 aria-current="page"
-                                href="#"
+                                href="/home"
                                 data-te-nav-link-ref
                             >Home</a>
                         </li>
-                        {/* <!-- Link --> */}
-                        <li
-                            className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
-                            data-te-nav-item-ref>
-                            <a
-                                className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                                href="/tournament-input"
-                                data-te-nav-link-ref
-                            >Add Tournament</a>
-                        </li>
-                        <li
-                            className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
-                            data-te-nav-item-ref>
-                            <a
-                                className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                                href="/admin"
-                                data-te-nav-link-ref
-                            >Manage Users</a>
-                        </li>
-                        <li
-                            className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
-                            data-te-nav-item-ref>
-                            <a
-                                className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                                href="#"
-                                data-te-nav-link-ref
-                            >Logout</a>
-                        </li>
+
+                        {!hasUserKey && (
+                            <li
+                                className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+                                data-te-nav-item-ref>
+                                <a
+                                    className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                    aria-current="page"
+                                    href="/"
+                                    data-te-nav-link-ref
+                                >Login</a>
+                            </li>
+                        )}
+
+                        {hasUserKey && (
+                            <>
+                                {/* <!-- Link --> */}
+                                <li
+                                    className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                                    data-te-nav-item-ref>
+                                    <a
+                                        className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                        href="/tournament-input"
+                                        data-te-nav-link-ref
+                                    >Add Tournament</a>
+                                </li>
+
                         
+                                <li
+                                    className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                                    data-te-nav-item-ref>
+                                    <a
+                                        className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                        href="/admin"
+                                        data-te-nav-link-ref
+                                    >Manage Users</a>
+                                </li>
+
+                       
+                                <li
+                                    className="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                                    data-te-nav-item-ref>
+                                    <a
+                                        className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                        href="#"
+                                        onClick={handleLogout}
+                                        data-te-nav-link-ref
+                                    >Logout</a>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>

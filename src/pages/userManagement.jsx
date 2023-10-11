@@ -66,6 +66,9 @@ export default function UserManagement() {
   const handleUpdateClick = async () => {
     try {
       await axios.put(`http://127.0.0.1:8000/api/auth/admin/${editUser.id}`, formData);
+
+      
+
       setEditUser(null);
       setFormData({
         name: '',
@@ -74,8 +77,8 @@ export default function UserManagement() {
       });
 
        // Reload the window after a successful update
-      window.location.reload();
-    } catch (error) {
+
+      } catch (error) {
       console.error(error);
     }
   };
@@ -98,7 +101,6 @@ export default function UserManagement() {
     })
     
     // Reload the window after a successful update
-    window.location.reload();
   } catch(error) {
       if (error.response.data === "{\"email\":[\"The email has already been taken.\"]}") {
         alert("The email has already been taken.")
@@ -111,7 +113,7 @@ export default function UserManagement() {
     try {
       await axios.delete(`http://127.0.0.1:8000/api/auth/admin/${id}`);
       console.log('User deleted successfully');
-      window.location.reload();
+
     } catch (error) {
       console.error('Error deleting user:', error);
     }
