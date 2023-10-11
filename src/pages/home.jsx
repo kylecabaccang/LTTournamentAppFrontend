@@ -7,7 +7,7 @@ function home() {
         <NavigationBar/>
         <div className='my-[15%]'>
             <div className='text-4xl text-center'>THIS IS THE HOMEPAGE.</div>
-            <div className='text-4xl text-center'>PLACE ANYTHING YOU WANT HERE (eg. Advertisements, etc.)</div>
+            <div className='text-4xl text-center'>PLACE ANYTHING YOU WANT HERE (eg. Advertisements, Web App Patch Notes, etc.)</div>
         </div>
     </>
   )

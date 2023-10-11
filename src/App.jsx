@@ -26,24 +26,25 @@ const isAuthenticated = () => {
 function App() {
 
   return (
-    <Router>
-        <Routes>
-          <Route path="/single-elim-16" element={isAuthenticated() ? <SingleElim16 /> : <Login/>}/>
-          <Route path="/single-elim-32" element={isAuthenticated() ? <SingleElim32 /> : <Login/>} />
-          <Route path="/tournament-input" element={isAuthenticated() ? <TournamentInput /> : <Login/>} />
 
-          <Route path="/admin" element={isAuthenticated() ? <UserManagement /> : <Login/>} />
-          <Route path="/home" element={<Home/>} />
-          <Route exact path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
-          <Route path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
-          <Route path="/logout" element={!isAuthenticated() ? <Logout /> : <Home/>} />
+  <Router>
+    <Routes>
+      <Route path="/single-elim-16" element={isAuthenticated() ? <SingleElim16 /> : <Login/>}/>
+      <Route path="/single-elim-32" element={isAuthenticated() ? <SingleElim32 /> : <Login/>} />
+      <Route path="/tournament-input" element={isAuthenticated() ? <TournamentInput /> : <Login/>} />
 
-          {/* Not sure if we will still be needing these */}
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/admin" element={isAuthenticated() ? <UserManagement /> : <Login/>} />
+      <Route path="/home" element={<Home/>} />
+      <Route exact path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
+      <Route path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
+      <Route path="/logout" element={!isAuthenticated() ? <Logout /> : <Home/>} />
 
-        </Routes>
-    </Router>
+      {/* Not sure if we will still be needing these */}
+      <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+
+    </Routes>
+  </Router>
 
   )
 }
