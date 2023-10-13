@@ -17,6 +17,14 @@ function Match({ player1, player2, onWinnerSelected }) {
   const [player1Clicked, setPlayer1Clicked] = useState(false);
   const [player2Clicked, setPlayer2Clicked] = useState(false);
 
+  const [player1Color, setPlayer1Color] = useState();
+  const [player2Color, setPlayer2Color] = useState();
+  const [player1BGLoseColor, setPlayer1BGLoseColor] = useState();
+  const [player2BGLoseColor, setPlayer2BGLoseColor] = useState();
+
+  const [player1BGWinColor, setPlayer1BGWinColor] = useState();
+  const [player2BGWinColor, setPlayer2BGWinColor] = useState();
+
   const handleWinnerSelected = (player) => {
     const loser = player === player1 ? player2 : player1;
     setWinner(player);
@@ -26,30 +34,60 @@ function Match({ player1, player2, onWinnerSelected }) {
     // Disable the buttons of the unselected player
     if (player === player1) {
       setPlayer2Clicked(true);
+      setPlayer2Color('white');
+      setPlayer2BGLoseColor('gray');
+      setPlayer1BGWinColor('#03c03c');
     } else {
       setPlayer1Clicked(true);
+      setPlayer1Color('white');
+      setPlayer1BGLoseColor('gray');
+      setPlayer2BGWinColor('#03c03c');
     }
   };
 
   return (
     <div className='flex'>
       <div className='h-[80px] w-[300px]'>
-        <div className='border-black border-2 h-[40px]'>
-          <button className='w-[100%]'
-            onClick={() => handleWinnerSelected(player1)}
-            disabled={player1Clicked}
-          >
-            {player1}
-          </button>
+
+        <div 
+          style={{
+          color: player2Color,
+          backgroundColor: player1BGWinColor
+        }}>
+          <div 
+          className='border-black border-2 h-[40px]'
+          style={{ 
+            color: player1Color,
+            backgroundColor: player1BGLoseColor 
+          }}>
+            <button className='w-[100%]'
+              onClick={() => handleWinnerSelected(player1)}
+              disabled={player1Clicked}
+            >
+              {player1}
+            </button>
+          </div>
         </div>
 
-        <div className='border-black border-2 h-[40px]'>
-          <button className='w-[100%]'
-            onClick={() => handleWinnerSelected(player2)}
-            disabled={player2Clicked}
-          >
-            {player2}
-          </button>
+        <div
+        style={{
+          color: player1Color,
+          backgroundColor: player2BGWinColor  
+  
+        }}>
+          <div 
+          className='border-black border-2 h-[40px]'
+          style={{ 
+            color: player2Color,
+            backgroundColor: player2BGLoseColor  
+          }}>
+            <button className='w-[100%]'
+              onClick={() => handleWinnerSelected(player2)}
+              disabled={player2Clicked}
+            >
+              {player2}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -165,7 +203,7 @@ const handleMouseMove = (e) => {
   return (
     <>
     <div 
-    className='scroll-container overflow-y-auto overflow-x-auto'
+    className='scroll-container overflow-y-auto overflow-x-auto bg-stone-300'
     ref={scrollContainerRef}
     onMouseDown={handleMouseDown}
     onMouseUp={handleMouseUp}
@@ -322,7 +360,7 @@ const handleMouseMove = (e) => {
         
         <div className='w-[300px]'>
           <h1 className='text-center h-[30px] w-[150px] border-lime-500 border-2'>CHAMPION</h1>
-          <div className='mt-[1250px] text-center border-black border-2 p-3'>
+          <div className='mt-[1250px] text-center border-black border-2 p-3 bg-yellow-400'>
             {champion}
           </div>
         </div>

@@ -54,18 +54,7 @@ export default function NavigationBar() {
                     <ul
                         className="list-style-none flex flex-col pl-0 lg:mt-1 lg:flex-row"
                         data-te-navbar-nav-ref>
-                        {/* <!-- Home link --> */}
-                        <li
-                            className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
-                            data-te-nav-item-ref>
-                            <a
-                                className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                                aria-current="page"
-                                href="/home"
-                                data-te-nav-link-ref
-                            >Home</a>
-                        </li>
-
+                        {/* <!-- Login link --> */}
                         {!hasUserKey && (
                             <li
                                 className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"

@@ -34,7 +34,7 @@ function App() {
       <Route path="/tournament-input" element={isAuthenticated() ? <TournamentInput /> : <Login/>} />
 
       <Route path="/admin" element={isAuthenticated() ? <UserManagement /> : <Login/>} />
-      <Route path="/home" element={<Home/>} />
+      <Route path="/" element={<Login/>} />
       <Route exact path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
       <Route path="/" element={!isAuthenticated() ? <Login /> : <Home/>} />
       <Route path="/logout" element={!isAuthenticated() ? <Logout /> : <Home/>} />

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import NavigationBar from '../components/NavigationBar';
 
 export default class Login extends Component {
     constructor(props) {
@@ -68,7 +67,6 @@ export default class Login extends Component {
         const { error } = this.state;
         return (
             <>
-            <NavigationBar/>
                 <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
                     <div className="container mx-auto">
                         <div className=" flex flex-wrap">
